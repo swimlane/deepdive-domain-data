@@ -79,26 +79,24 @@ class CZDS(object):
             zone_name = url.rsplit('/', 1)[-1].rsplit('.')[-2]
 
             compressed_file = BytesIO(response.content)
-            #compressed_file.write(response.content)
-            #compressed_file.seek(0)
+            
+
+            _,option = cgi.parse_header(response.headers['content-disposition'])
+            filename = option['filename']
+
+            if not filename:
+                filename = zone_name + '.txt.gz'
+                
             decompressed_file = gzip.GzipFile(fileobj=compressed_file, mode='rb')
-
-            if self.save_path:
-                # Try to get the filename from the header
-                _,option = cgi.parse_header(response.headers['content-disposition'])
-                filename = option['filename']
-
-                # If could get a filename from the header, then makeup one like [tld].txt.gz
-                if not filename:
-                    filename = zone_name + '.txt'
-
-                # This is where the zone file will be saved
-                path = '{0}/{1}'.format(self.save_path, filename)
-                with open(path, 'wb') as outfile:
-                    outfile.write(decompressed_file.read())
-            else:
-
-                return self.parse(decompressed_file.read())
+            text_list = []
+            for line in decompressed_file.readlines():
+                text_list.append(line.decode('utf-8').split('\t')[0].rstrip('.'))
+            text_string_list = '\n'.join(text_list)
+            text_string_bytes_object = BytesIO()
+            text_string_bytes_object.write(text_string_list.encode('utf-8'))
+            text_string_bytes_object.seek(0)
+            with gzip.open('{0}/{1}'.format(self.save_path, filename), 'wb') as f:
+                f.write(text_string_bytes_object.read())
             
         elif status_code == 401:
           #  print("The access_token has been expired. Re-authenticating")
