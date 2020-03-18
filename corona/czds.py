@@ -1,7 +1,7 @@
 import json
 import requests
 import sys, cgi, os, gzip
-import datetime
+# import datetime
 
 try:
     from StringIO import BytesIO ## for Python 2
