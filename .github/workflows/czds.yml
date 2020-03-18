@@ -1,0 +1,37 @@
+name: CZDS
+
+on:
+  schedule:
+    - cron: "0 20 * * *"
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Installing setup-tools
+      run: sudo apt-get install python3-setuptools
+    - name: Install requirements
+      run: pip3 install -r requirements-czds.txt
+    - name: Run script
+      env: # Or as an environment variable
+        USERNAME: ${{ secrets.USERNAME }}
+        PASSWORD: ${{ secrets.PASSWORD }}
+      run: |
+        git checkout -b czds-new-branch
+        python3 run_czds.py
+        git add ./data/*/\*.
+        git commit -m 'adding czds data'
+        git checkout master
+        git merge czds-new-branch
+        git push origin master
+
+
+    - name: git lfs commit
+      run: |
+        
