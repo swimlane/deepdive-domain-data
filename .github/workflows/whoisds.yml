@@ -24,7 +24,7 @@ jobs:
         PASSWORD: ${{ secrets.PASSWORD }}
       run: |
         git config credential.helper "store --file=.git/credentials"
-        - echo "https://${{ secrets.githubpat }}:@github.com" > .git/credentials
+        echo "https://${{ secrets.githubpat }}:@github.com" > .git/credentials
         git checkout -b whoisds-new-branch
         python3 run_whoisds.py
         git add .

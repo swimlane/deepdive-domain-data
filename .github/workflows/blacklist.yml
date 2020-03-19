@@ -18,13 +18,12 @@ jobs:
       run: sudo apt-get install python3-setuptools
     - name: Run script
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        - echo "https://${{ secrets.githubpat }}:@github.com" > .git/credentials
-        git checkout -b whoisds-new-branch
-        python3 run_whoisds.py
+        git config credential.helper "store --file=.git/credentials"
+        echo "https://${{ secrets.githubpat }}:@github.com" > .git/credentials
+        git checkout -b blacklist-new-branch
+        python3 run_blacklist.py
         git add .
-        git commit -m 'adding whoisds data'
+        git commit -m 'adding blacklist data'
         git checkout master
-        git merge whoisds-new-branch
+        git merge blacklist-new-branch
         git push origin master

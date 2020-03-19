@@ -24,11 +24,11 @@ jobs:
         PASSWORD: ${{ secrets.PASSWORD }}
       run: |
         git config credential.helper "store --file=.git/credentials"
-        - echo "https://${{ secrets.githubpat }}:@github.com" > .git/credentials
-        git checkout -b whoisds-new-branch
-        python3 run_whoisds.py
+        echo "https://${{ secrets.githubpat }}:@github.com" > .git/credentials
+        git checkout -b czds-new-branch
+        python3 run_czds.py
         git add .
-        git commit -m 'adding whoisds data'
+        git commit -m 'adding czds data'
         git checkout master
-        git merge whoisds-new-branch
+        git merge czds-new-branch
         git push origin master
