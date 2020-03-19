@@ -67,5 +67,6 @@ class WhoisDs(object):
             text_string_bytes_object.seek(0)
             with gzip.open('{0}{1}'.format(self.save_path, filename), 'wb') as f:
                 f.write(text_string_bytes_object.read())
+                print("Wrote daily new registered zone file: {}{}".format(self.save_path, filename))
 
         return ret

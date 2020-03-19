@@ -90,14 +90,39 @@ class CZDS(object):
             decompressed_file = gzip.GzipFile(fileobj=compressed_file, mode='rb')
             text_list = []
             for line in decompressed_file.readlines():
-                text_list.append(line.decode('utf-8').split('\t')[0].rstrip('.'))
-            text_string_list = '\n'.join(text_list)
+                domain = line.decode('utf-8').split('\t')[0].rstrip('.')
+                text_list.append(domain)
+            text_string_list = '\n'.join(list(set(text_list)))
             text_string_bytes_object = BytesIO()
             text_string_bytes_object.write(text_string_list.encode('utf-8'))
             text_string_bytes_object.seek(0)
-            with gzip.open('{0}/{1}'.format(self.save_path, filename), 'wb') as f:
-                f.write(text_string_bytes_object.read())
-            
+            text_string_buf = text_string_bytes_object.read()
+
+
+            gzip_object = BytesIO()
+            with gzip.open(gzip_object, 'wb') as f:
+                f.write(text_string_buf)
+
+            gzip_size = gzip_object.__sizeof__()
+
+            MAX_FILE_SIZE = 1024 * 1024 * 99
+            if gzip_size >= MAX_FILE_SIZE:
+                print(zone_name)
+                chapters = 0
+                source_buf = text_string_buf
+
+                n = MAX_FILE_SIZE
+                final = [source_buf[i * n:(i+1) * n] for i in range((len(source_buf) + n -1) // n)]  # list comprehension chunker
+
+                for chunk in final:
+                    chapters += 1
+                    chapter_string = "{}".format(chapters)
+                    chapter_string = chapter_string.zfill(2)
+                    chapter_filename = "{}_{}{}".format(zone_name, chapter_string, '.txt.gz')
+                    with open(chapter_filename, 'wb+') as f:
+                        f.write(chunk)
+                        print("Wrote Zone File {}".format(chapter_filename))
+
         elif status_code == 401:
           #  print("The access_token has been expired. Re-authenticating")
             self.token = self.authenticate()

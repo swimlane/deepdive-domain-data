@@ -11,6 +11,7 @@ def main(string_value):
         'value': re.compile(confusables.confusable_regex(string_value, include_character_padding=False), re.IGNORECASE | re.UNICODE)
     }
     corona = Corona().generate(term_dict['term'], term_dict['value'])
+    print(corona)
 
 
 if __name__ == '__main__':

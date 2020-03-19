@@ -22,14 +22,13 @@ class Corona(object):
     def __get_each_term(self, term, directory, zone_file=None):
         #directory = directory.replace('json_files','zone_files')
         for zone in os.listdir(directory):
-            
             #decompressed_file = gzip.open(os.path.join(directory,zone))
             if zone_file:
                 if zone_file in zone:
-                    matches = [line for line in open('{}/{}'.format(directory, zone), "r") if re.match(term,line)]
+                    matches = [line for line in open('{}/{}'.format(directory, zone), "r") if term.search(line)]
                     if matches:
                         for match in matches:
-                            domain =  match.strip().split('\t')[0].rstrip('.')
+                            domain = match.strip().split('\t')[0].rstrip('.')
                             ips = str(self.__get_dns_info(match.strip().split('\t')[0].rstrip('.'))).encode('utf-8')
                             ips = ast.literal_eval(ips.decode('utf-8'))
                             if isinstance(ips, list):
@@ -47,7 +46,7 @@ class Corona(object):
                 try:
                     with gzip.open('{}/{}'.format(directory,zone),'rt') as f:
                         for line in f:
-                            if re.match(term, line):
+                            if term.search(line):
                                 print('got line', line)
                 
                                 ips = str(self.__get_dns_info(line)).encode('utf-8')
