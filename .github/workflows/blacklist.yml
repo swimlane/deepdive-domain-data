@@ -18,7 +18,8 @@ jobs:
       run: sudo apt-get install python3-setuptools
     - name: Run script
       run: |
-        git config credential.helper "store --file=.git/credentials"
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
         - echo "https://${{ secrets.githubpat }}:@github.com" > .git/credentials
         git checkout -b whoisds-new-branch
         python3 run_whoisds.py
