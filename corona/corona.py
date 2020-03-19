@@ -47,8 +47,6 @@ class Corona(object):
                     with gzip.open('{}/{}'.format(directory,zone),'rt') as f:
                         for line in f:
                             if term.search(line):
-                                print('got line', line)
-                
                                 ips = str(self.__get_dns_info(line)).encode('utf-8')
                                 ips = ast.literal_eval(ips.decode('utf-8'))
                                 if isinstance(ips, list):
@@ -56,9 +54,13 @@ class Corona(object):
                                         if ip not in self.ip_dict:
                                             self.ip_dict[ip] = []
                                         self.ip_dict[ip].append(line)
-                                if zone.replace('.txt.gz','') not in self.zone_dict:
-                                    self.zone_dict[zone.replace('.txt.gz','')] = []
-                                self.zone_dict[zone.replace('.txt.gz','')].append({
+                                if '_' in zone:
+                                    zone_split = zone.split('.')
+                                    zone = zone_split[0].split('_')[0]
+                                print(zone)
+                                if zone not in self.zone_dict:
+                                    self.zone_dict[zone] = []
+                                self.zone_dict[zone].append({
                                     'domain': line,
                                     'ips': ips
                                 })
