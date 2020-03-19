@@ -22,4 +22,11 @@ jobs:
       env: # Or as an environment variable
         USERNAME: ${{ secrets.USERNAME }}
         PASSWORD: ${{ secrets.PASSWORD }}
-      run: python3 run_data.py 'vaccine'
+      run: |
+        git checkout -b vaccine-domains-branch
+        python3 run_data.py 'vaccine'
+        git add ./data/json_files/*/\*.
+        git commit -m 'adding vaccine domain json'
+        git checkout master
+        git merge vaccine-domains-branch
+        git push origin master

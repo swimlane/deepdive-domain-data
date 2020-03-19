@@ -1,4 +1,4 @@
-name: virus domains
+name: corona domains
 
 on:
   schedule:
@@ -22,4 +22,11 @@ jobs:
       env: # Or as an environment variable
         USERNAME: ${{ secrets.USERNAME }}
         PASSWORD: ${{ secrets.PASSWORD }}
-      run: python3 run_data.py 'virus'
+      run: |
+        git checkout -b corona-domains-branch
+        python3 run_data.py 'corona'
+        git add ./data/json_files/*/\*.
+        git commit -m 'adding corona domain json'
+        git checkout master
+        git merge corona-domains-branch
+        git push origin master

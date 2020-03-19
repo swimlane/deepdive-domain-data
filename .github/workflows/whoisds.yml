@@ -1,4 +1,4 @@
-name: CZDS data
+name: whoisds data
 
 on:
   schedule:
@@ -23,10 +23,10 @@ jobs:
         USERNAME: ${{ secrets.USERNAME }}
         PASSWORD: ${{ secrets.PASSWORD }}
       run: |
-        git checkout -b czds-new-branch
-        python3 run_czds.py
+        git checkout -b whoisds-new-branch
+        python3 run_whoisds.py
         git add ./data/*/*/\*.
-        git commit -m 'adding czds data'
+        git commit -m 'adding whoisds data'
         git checkout master
-        git merge czds-new-branch
+        git merge whoisds-new-branch
         git push origin master
