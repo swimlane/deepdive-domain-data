@@ -14,6 +14,7 @@ except ImportError:
     from io import BytesIO  ## for Python 3
 
 class WhoisDs(object):
+
     def __init__(self, save_path=None, date=None):
         if date:
             self.date = date
@@ -30,7 +31,7 @@ class WhoisDs(object):
         filename = "{}.zip".format(past)
         encoded_filename = base64.b64encode(filename.encode('utf-8'))
 
-        response = requests.get('%s/%s/nrd' % ("https://whoisds.com//whois-database/newly-registered-domains", encoded_filename.decode('ascii')))
+        response = requests.get('{}/{}/nrd'.format("https://whoisds.com//whois-database/newly-registered-domains", encoded_filename.decode('ascii')))
 
         try:
             with BytesIO(response.content) as zip_file:

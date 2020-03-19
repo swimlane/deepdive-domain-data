@@ -110,29 +110,19 @@ class CZDS(object):
            # sys.stderr.write('Failed to download zone from {0} with code {1}\n'.format(url, status_code))
 
     def download(self, zone_file_name=None):
-        download_list = []
         # The zone files will be saved in a sub-directory
         if self.save_path:
-                if not os.path.exists(self.save_path):
-                    os.makedirs(self.save_path)
-
+            if not os.path.exists(self.save_path):
+                os.makedirs(self.save_path)
         # Download the zone files one by one
         for link in self._get_zone_links():
-            return_dict = {}
             if zone_file_name:
                 if zone_file_name in link:
-                    return_dict[link] = self._download_single_zone_file(link)
-                  #  print(link)
-                  #  print(return_dict[link])
+                    self._download_single_zone_file(link)
                 else:
                     pass
             else:
-                return_dict[link] = self._download_single_zone_file(link)
-               # print(link)
-               # print(return_dict[link])
-            
-            download_list.append(return_dict)
-        return download_list
+                self._download_single_zone_file(link)
 
     def parse(self, content):
         return_list = []

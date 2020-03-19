@@ -1,3 +1,5 @@
 dnspython
 requests
 confusables
+pendulum
+tldextract
