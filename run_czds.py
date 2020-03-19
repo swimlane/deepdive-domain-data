@@ -5,4 +5,7 @@ from corona  import CZDS
 
 save_path = './data/zone_files/{}/'.format(datetime.today().strftime('%Y-%m-%d'))
 
-czds = CZDS(os.environ['USERNAME'],os.environ['PASSWORD'], save_path=save_path).download()
+USERNAME = os.environ['USERNAME']
+PASSWORD = os.environ['PASSWORD']
+
+czds = CZDS(USERNAME,PASSWORD, save_path=save_path).download()
