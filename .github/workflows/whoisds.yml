@@ -25,7 +25,7 @@ jobs:
       run: |
         git checkout -b whoisds-new-branch
         python3 run_whoisds.py
-        git add ./data/*/*/\*.
+        git add ./data/whoids_files/*/\*.txt.gz
         git commit -m 'adding whoisds data'
         git checkout master
         git merge whoisds-new-branch

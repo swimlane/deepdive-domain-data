@@ -25,7 +25,7 @@ jobs:
       run: |
         git checkout -b coronav-domains-branch
         python3 run_data.py 'coronav'
-        git add ./data/json_files/*/\*.
+        git add ./data/json_files/*/\*.json
         git commit -m 'adding coronav domain json'
         git checkout master
         git merge coronav-domains-branch

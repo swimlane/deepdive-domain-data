@@ -25,7 +25,7 @@ jobs:
       run: |
         git checkout -b covid-domains-branch
         python3 run_data.py 'covid'
-        git add ./data/json_files/*/\*.
+        git add ./data/json_files/*/\*.json
         git commit -m 'adding covid domain json'
         git checkout master
         git merge covid-domains-branch
