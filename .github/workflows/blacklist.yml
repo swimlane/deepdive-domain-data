@@ -1,0 +1,27 @@
+name: blacklist
+
+on:
+  schedule:
+    - cron: "0 22 * * *"
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Installing setup-tools
+      run: sudo apt-get install python3-setuptools
+    - name: Run script
+      run: |
+        git checkout -b blacklist-domains-branch
+        python3 run_blacklist.py
+        git add ./data/blacklist/master_blacklist.txt
+        git commit -m 'adding blacklist domains text file'
+        git checkout master
+        git merge blacklist-domains-branch
+        git push origin master

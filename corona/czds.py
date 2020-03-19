@@ -61,10 +61,8 @@ class CZDS(object):
 
         if status_code == 200:
             zone_links = links_response.json()
-            #print("{0}: The number of zone files to be downloaded is {1}".format(datetime.datetime.now(),len(zone_links)))
             return zone_links
         elif status_code == 401:
-            #print("The access_token has been expired. Re-authenticating")
             self.token = self.authenticate()
             self._get_zone_links()
         else:
@@ -120,22 +118,16 @@ class CZDS(object):
                     chapter_path_filename = "{}{}".format(self.save_path, chapter_filename)
                     with open(chapter_path_filename, 'wb+') as f:
                         f.write(chunk)
-                        print("Wrote Zone File {}".format(chapter_path_filename))
             else:
                 with open(path_filename, 'wb+') as f:
-                    f.write(gzip_object.read())
-                    print("Wrote Zone File {}".format(path_filename))
+                    f.write(gzip_object)#.read())
 
         elif status_code == 401:
-          #  print("The access_token has been expired. Re-authenticating")
             self.token = self.authenticate()
-            #self._download_single_zone_file(url, output_directory)
         elif status_code == 404:
             pass
-            #print("No zone file found for {0}".format(url))
         else:
             pass
-           # sys.stderr.write('Failed to download zone from {0} with code {1}\n'.format(url, status_code))
 
     def download(self, zone_file_name=None):
         # The zone files will be saved in a sub-directory

@@ -1,0 +1,32 @@
+name: generate json_data
+
+on:
+  schedule:
+    - cron: "0 21 * * *"
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Installing setup-tools
+      run: sudo apt-get install python3-setuptools
+    - name: Install requirements
+      run: pip3 install -r requirements.txt
+    - name: Run script
+      env: # Or as an environment variable
+        USERNAME: ${{ secrets.USERNAME }}
+        PASSWORD: ${{ secrets.PASSWORD }}
+      run: |
+        git checkout -b generated-json-data-branch
+        python3 run_data.py
+        git add .
+        git commit -m 'adding generated json data'
+        git checkout master
+        git merge generated-json-data-branch
+        git push origin master

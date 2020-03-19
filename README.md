@@ -21,8 +21,8 @@ The file formats you will find, each day, are located with in the [Data](data) f
     * The datasets ending in `_ip.json` takes all the identified domains and retrieves their A record IP address.  With this JSON file you are able to see which domains are associated with a specific IP address.
 * {term}_zone.json
     * The datasets ending in `_zone.json` creates a list of dictionaries for each TLD.  Each of these dictionaries contains the actual identified domain and the ip address for this domain based on their A record IP address. 
-* {term}_blacklist.txt
-    * This file contains a list of all domains related to a term, expect for domains ending in .gov.  More than likely you should blacklist all of these domains but use at your own discretion.
+* master_blacklist.txt
+    * This file contains a blacklist of all terms and their identified domains, except for domains ending in .gov.  More than likely you should blacklist all of these domains but use at your own discretion.
 
 ## Identification of Domains
 
