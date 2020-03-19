@@ -25,6 +25,8 @@ jobs:
       run: |
         git config credential.helper "store --file=.git/credentials"
         echo "https://${{ secrets.githubpat }}:@github.com" > .git/credentials
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
         git checkout -b json-data-new-branch
         python3 run_data.py
         git add .
