@@ -86,7 +86,9 @@ class CZDS(object):
 
             if not filename:
                 filename = zone_name + '.txt.gz'
-                
+
+            path_filename = "{}{}".format(self.save_path, filename)
+
             decompressed_file = gzip.GzipFile(fileobj=compressed_file, mode='rb')
             text_list = []
             for line in decompressed_file.readlines():
@@ -107,7 +109,6 @@ class CZDS(object):
 
             MAX_FILE_SIZE = 1024 * 1024 * 99
             if gzip_size >= MAX_FILE_SIZE:
-                print(zone_name)
                 chapters = 0
                 source_buf = text_string_buf
 
@@ -119,9 +120,15 @@ class CZDS(object):
                     chapter_string = "{}".format(chapters)
                     chapter_string = chapter_string.zfill(2)
                     chapter_filename = "{}_{}{}".format(zone_name, chapter_string, '.txt.gz')
-                    with open(chapter_filename, 'wb+') as f:
+                    chapter_path_filename = "{}{}".format(self.save_path, chapter_filename)
+                    with open(chapter_path_filename, 'wb+') as f:
                         f.write(chunk)
-                        print("Wrote Zone File {}".format(chapter_filename))
+                        print("Wrote Zone File {}".format(chapter_path_filename))
+            else:
+                with open(path_filename, 'wb+') as f:
+                    gzip_object.seek(0)
+                    f.write(gzip_object.read())
+                    print("Wrote Zone File {}".format(path_filename))
 
         elif status_code == 401:
           #  print("The access_token has been expired. Re-authenticating")
