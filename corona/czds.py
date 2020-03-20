@@ -75,7 +75,6 @@ class CZDS(object):
 
         if status_code == 200:
             zone_name = url.rsplit('/', 1)[-1].rsplit('.')[-2]
-
             compressed_file = BytesIO(response.content)
 
 
@@ -99,10 +98,9 @@ class CZDS(object):
             text_string_buf = text_string_bytes_object.read()
 
             gzip_object = gzip.compress(text_string_buf)
-
             gzip_size = gzip_object.__sizeof__()
 
-            MAX_FILE_SIZE = 1024 * 1024 * 99
+            MAX_FILE_SIZE = 1024 * 1024 * 35
             if gzip_size >= MAX_FILE_SIZE:
                 chapters = 0
                 source_buf = gzip_object
@@ -120,7 +118,7 @@ class CZDS(object):
                         f.write(chunk)
             else:
                 with open(path_filename, 'wb+') as f:
-                    f.write(gzip_object)#.read())
+                    f.write(gzip_object)
 
         elif status_code == 401:
             self.token = self.authenticate()

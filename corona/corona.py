@@ -30,40 +30,39 @@ class Corona(object):
         zones = os.listdir(directory)
         zones = sorted(zones)
         for zone in zones:
-            if 'life.' in zone:
-                if '_' in zone:
-                    key = zone.split('_')[0]
-                    if key not in chunked_files:
-                        chunked_files[key] = BytesIO()
-                    with open('{}/{}'.format(directory, zone), 'rb') as f:
-                        chunked_files[key].write(f.read())
-                else:
-                    try:
-                        with gzip.open('{}/{}'.format(directory,zone), 'rt') as f:
-                            for line in f:
-                                for term in term_list:
-                                    if term['value'].search(line):
-                                        ips = str(self.__get_dns_info(line.strip())).encode('utf-8')
-                                        ips = ast.literal_eval(ips.decode('utf-8'))
-                                        if isinstance(ips, list):
-                                            for ip in ips:
-                                                if term['term'] not in self.ip_dict:
-                                                    self.ip_dict[term['term']] = {}
-                                                if ip not in  self.ip_dict[term['term']]:
-                                                    self.ip_dict[term['term']][ip] = []
-                                                self.ip_dict[term['term']][ip].append(line)
+            if '_' in zone:
+                key = zone.split('_')[0]
+                if key not in chunked_files:
+                    chunked_files[key] = BytesIO()
+                with open('{}/{}'.format(directory, zone), 'rb') as f:
+                    chunked_files[key].write(f.read())
+            else:
+                try:
+                    with gzip.open('{}/{}'.format(directory,zone), 'rt') as f:
+                        for line in f:
+                            for term in term_list:
+                                if term['value'].search(line):
+                                    ips = str(self.__get_dns_info(line.strip())).encode('utf-8')
+                                    ips = ast.literal_eval(ips.decode('utf-8'))
+                                    if isinstance(ips, list):
+                                        for ip in ips:
+                                            if term['term'] not in self.ip_dict:
+                                                self.ip_dict[term['term']] = {}
+                                            if ip not in  self.ip_dict[term['term']]:
+                                                self.ip_dict[term['term']][ip] = []
+                                            self.ip_dict[term['term']][ip].append(line)
 
-                                        if term['term'] not in self.zone_dict:
-                                            self.zone_dict[term['term']] ={}
-                            
-                                        if zone.replace('.txt.gz','') not in self.zone_dict[term['term']]:
-                                            self.zone_dict[term['term']][zone.replace('.txt.gz','')] = []
-                                        self.zone_dict[term['term']][zone.replace('.txt.gz','')].append({
-                                            'domain': line,
-                                            'ips': ips
-                                        })
-                    except:
-                        pass
+                                    if term['term'] not in self.zone_dict:
+                                        self.zone_dict[term['term']] ={}
+                        
+                                    if zone.replace('.txt.gz','') not in self.zone_dict[term['term']]:
+                                        self.zone_dict[term['term']][zone.replace('.txt.gz','')] = []
+                                    self.zone_dict[term['term']][zone.replace('.txt.gz','')].append({
+                                        'domain': line,
+                                        'ips': ips
+                                    })
+                except:
+                    pass
 
         if len(chunked_files) > 0:
             for key in chunked_files:

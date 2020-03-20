@@ -1,7 +1,9 @@
 import os, json
-from datetime import datetime
+from datetime import datetime, timedelta
 
-json_files_path = './data/json_files/{}/'.format(datetime.today().strftime('%Y-%m-%d'))
+d = datetime.today() - timedelta(days=1)
+json_files_path = './data/json_files/{}/'.format(d.strftime('%Y-%m-%d'))
+
 master_blacklist_path = './data/blacklist/'
 
 blacklist = []
@@ -14,7 +16,7 @@ if os.path.exists(json_files_path):
                     for item in val:
                         if 'domain' in item:
                             if item['domain']:
-                                blacklist.append(item['domain'])
+                                blacklist.append(item['domain'].strip())
 
     master_blacklist = list(set(blacklist))
 
