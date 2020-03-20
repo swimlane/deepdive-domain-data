@@ -27,8 +27,13 @@ class Corona(object):
 
     def __get_each_term(self, term_list, directory, zone_file=None):
         chunked_files = {}
-        zones = os.listdir(directory)
-        zones = sorted(zones)
+        try:
+            zones = os.listdir(directory)
+            zones = sorted(zones)
+        except:
+            print(os.listdir('./data/zone_files/'))
+            print(os.listdir('./data/whoisds_files/'))
+            raise Exception('Unable to find appro')
         for zone in zones:
             if '_' in zone:
                 key = zone.split('_')[0]

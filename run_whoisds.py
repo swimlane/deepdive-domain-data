@@ -3,7 +3,7 @@ import pendulum
 
 from corona import WhoisDs
 
-d = datetime.today() - timedelta(days=1)
+d = datetime.today() - timedelta(days=2)
 save_path = './data/whoisds_files/{}/'.format(d.strftime('%Y-%m-%d'))
 
 # Currently set to run for previous day (see .add(days=-1) below) to ensure availability
