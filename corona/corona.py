@@ -8,17 +8,17 @@ except ImportError:
     from io import BytesIO ## for Python 3
 
 
-
 class Corona(object):
 
     zone_dict = {}
     ip_dict = {}
-    _folder_list = ['zone_files', 'whoisds_files']
+    _czds_folder_list = ['zone_files']
+    _whoisds_folder_list = ['whoisds_files']
 
     def __get_dns_info(self, domain):
         return_list = []
         try:
-            answers = dns.resolver.query(domain,'A')
+            answers = dns.resolver.query(domain, 'A')
         except:
             return None
         for server in answers:
@@ -33,7 +33,7 @@ class Corona(object):
         except:
             print(os.listdir('./data/zone_files/'))
             print(os.listdir('./data/whoisds_files/'))
-            raise Exception('Unable to find appro')
+            raise Exception('Unable to find appropriate source files.')
         for zone in zones:
             if '_' in zone:
                 key = zone.split('_')[0]
@@ -109,11 +109,20 @@ class Corona(object):
 
     def generate(self, term_list):
         d = datetime.today() - timedelta(days=1)
-       # save_path = './data/zone_files/{}/'.format(d.strftime('%Y-%m-%d'))
+        # save_path = './data/zone_files/{}/'.format(d.strftime('%Y-%m-%d'))
         date = d.strftime('%Y-%m-%d')
-        for folder in self._folder_list:
+        for folder in self._czds_folder_list:  # for full zone transfer files (i.e. czds)
             directory = './data/{folder}/{date}/'.format(folder=folder, date=date)
             self.__get_each_term(term_list, directory)
-        #self.__get_each_term(term_list)
+        for folder in self._whoisds_folder_list:  # for daily new files (i.e. whoisds)
+            directory_names = []
+            whoisds_directory = './data/{folder}/'.format(folder=folder)
+            for root, d_names, f_names in os.walk(whoisds_directory):
+                for d in d_names:
+                    directory_names.append(os.path.join(root, d))
+            for directory in directory_names:
+                self.__get_each_term(term_list, directory)
+
+        # self.__get_each_term(term_list)
         self.__save_json('./data/json_files/{}'.format(date), 'ip', self.ip_dict)
         self.__save_json('./data/json_files/{}'.format(date), 'zone', self.zone_dict)

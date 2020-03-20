@@ -21,7 +21,6 @@ class WhoisDs(object):
         else:
             self.date = pendulum.now('UTC')
         self.save_path = save_path
-        Path(self.save_path).mkdir(parents=True, exist_ok=True)
 
     def latest(self):
         latest_list = []
@@ -41,7 +40,8 @@ class WhoisDs(object):
                             for line in ffile.readlines():
                                 latest_list.append(line.decode('utf-8', errors='ignore').strip())
         except Exception as e:
-            print("Unable to Unzip WhoisDs zone data -- data might not be generated yet.  {}".format(e))
+            print("Unable to Unzip WhoisDs zone data -- date is likely out of range.  {}".format(e))
+            print(response.content)
 
         return latest_list
 
@@ -58,15 +58,15 @@ class WhoisDs(object):
                 print(e)
 
         ret = {}
-        for tld in tld_dict:
-            ret[tld] = tld_dict[tld]
-            filename = "{}.txt.gz".format(tld)
-            text_string_list = '\n'.join(tld_dict[tld])
-            text_string_bytes_object = BytesIO()
-            text_string_bytes_object.write(text_string_list.encode('utf-8'))
-            text_string_bytes_object.seek(0)
-            with gzip.open('{0}{1}'.format(self.save_path, filename), 'wb') as f:
-                f.write(text_string_bytes_object.read())
-               # print("Wrote daily new registered zone file: {}{}".format(self.save_path, filename))
-
-        return ret
+        if len(tld_dict) > 0:
+            Path(self.save_path).mkdir(parents=True, exist_ok=True)
+            for tld in tld_dict:
+                ret[tld] = tld_dict[tld]
+                filename = "{}.txt.gz".format(tld)
+                text_string_list = '\n'.join(tld_dict[tld])
+                text_string_bytes_object = BytesIO()
+                text_string_bytes_object.write(text_string_list.encode('utf-8'))
+                text_string_bytes_object.seek(0)
+                with gzip.open('{0}{1}'.format(self.save_path, filename), 'wb') as f:
+                    f.write(text_string_bytes_object.read())
+            return ret
