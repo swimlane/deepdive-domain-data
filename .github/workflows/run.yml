@@ -1,4 +1,4 @@
-name: whoisds data
+name: Generate Daily Domain Data
 
 on:
   schedule:
@@ -27,10 +27,10 @@ jobs:
         echo "https://${{ secrets.githubpat }}:@github.com" > .git/credentials
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git checkout -b whoisds-new-branch
-        python3 run_whoisds.py
+        git checkout -b new-temp-branch
+        python3 run.py
         git add .
-        git commit -m 'adding whoisds data'
+        git commit -m 'adding daily domain data'
         git checkout master
-        git merge whoisds-new-branch
+        git merge new-temp-branch
         git push origin master
