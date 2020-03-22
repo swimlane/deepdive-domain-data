@@ -108,7 +108,7 @@ class Corona(object):
             f.close()
 
     def generate(self, term_list):
-        d = datetime.today() - timedelta(days=1)
+        d = datetime.today() - timedelta(days=2)
         # save_path = './data/zone_files/{}/'.format(d.strftime('%Y-%m-%d'))
         date = d.strftime('%Y-%m-%d')
         for folder in self._czds_folder_list:  # for full zone transfer files (i.e. czds)
