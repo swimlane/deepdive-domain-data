@@ -17,22 +17,29 @@ class RunDomainData(object):
     _save_path = './data/{folder}/{date}/'
 
     def __run_czds(self):
+        print('Running CZDS')
         czds_save_path = self._save_path.format(folder='zone_files',date=self._date.strftime('%Y-%m-%d'))
         czds = CZDS(USERNAME,PASSWORD, save_path=czds_save_path).download()
+        print('Completed CZDS')
 
     def __run_whoids(self):
+        print('Running WHOIDS')
         whoisds_save_path = self._save_path.format(folder='whoisds_files',date=self._date.strftime('%Y-%m-%d'))
         whoisds = WhoisDs(date=pendulum.now('UTC').add(days=-2), save_path=whoisds_save_path).run()
+        print('Completed WHOISDS')
 
     def __run_corona(self):
+        print('Running Corona')
         for item in ['corona','coronav','covid','pandemic','virus','vaccine']:
             term_list.append({
                 'term': item,
                 'value': re.compile(confusables.confusable_regex(item, include_character_padding=False), re.IGNORECASE | re.UNICODE)
             })
         corona = Corona().generate(term_list)
+        print('Completed Corona')
 
     def __run_blacklist(self):
+        print('Running Blacklist')
         json_save_path = self._save_path.format(folder='json_files',date=self._date.strftime('%Y-%m-%d'))
         master_blacklist_path = './data/blacklist/'
         blacklist_config = open('blacklist.config', 'r').read().split('\n')
@@ -56,6 +63,7 @@ class RunDomainData(object):
                 blacklist.write("\n".join(master_blacklist))
         else:
             raise Exception('Unable to find json_files_path')
+        print('Completed Blacklist')
 
 
     def run(self):
