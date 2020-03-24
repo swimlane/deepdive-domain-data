@@ -40,9 +40,7 @@ class RunDomainData(object):
 
     def __run_blacklist(self):
         print('Running Blacklist')
-        #json_save_path = self._save_path.format(folder='json_files',date=self._date.strftime('%Y-%m-%d'))
-        json_save_path = self._save_path.format(folder='json_files',date='2020-03-18')
-
+        json_save_path = self._save_path.format(folder='json_files',date=self._date.strftime('%Y-%m-%d'))
         master_blacklist_path = './data/blacklist/'
         blacklist_config = open('blacklist.config', 'r').read().split('\n')
         blacklist = []
@@ -69,20 +67,20 @@ class RunDomainData(object):
 
 
     def run(self):
-        #try:
-        #    self.__run_czds()
-        #except:
-        #    raise Exception('Error running CZDS')
+        try:
+            self.__run_czds()
+        except:
+            raise Exception('Error running CZDS')
 
-       # try:
-       #     self.__run_whoids()
-       # except:
-        #    raise Exception('Error running WHOISDS')
+        try:
+            self.__run_whoids()
+        except:
+            raise Exception('Error running WHOISDS')
 
-       # try:
-       #     self.__run_corona()
-      #  except:
-       #     raise Exception('Error running Corona')
+        try:
+            self.__run_corona()
+        except:
+            raise Exception('Error running Corona')
 
 
         try:

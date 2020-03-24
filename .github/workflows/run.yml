@@ -14,21 +14,26 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Installing setup-tools
-      run: sudo apt-get install python3-setuptools
-    - name: Install requirements
-      run: pip3 install -r requirements.txt
-    - name: Run script
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run Domain Data
       env: # Or as an environment variable
         USERNAME: ${{ secrets.USERNAME }}
         PASSWORD: ${{ secrets.PASSWORD }}
       run: |
-        git config credential.helper "store --file=.git/credentials"
-        echo "https://${{ secrets.githubpat }}:@github.com" > .git/credentials
-        git checkout -b new-temp-branch
         python3 run.py
-        git add .
-        git commit -m 'adding daily domain data'
-        git checkout master
-        git merge new-temp-branch
-        git push origin master
+    - name: Commit files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -m "Add changes" -a
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
