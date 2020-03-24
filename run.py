@@ -67,20 +67,20 @@ class RunDomainData(object):
 
 
     def run(self):
-        try:
-            self.__run_czds()
-        except:
-            raise Exception('Error running CZDS')
+        #try:
+        #    self.__run_czds()
+        #except:
+        #    raise Exception('Error running CZDS')
 
-        try:
-            self.__run_whoids()
-        except:
-            raise Exception('Error running WHOISDS')
+       # try:
+       #     self.__run_whoids()
+       # except:
+        #    raise Exception('Error running WHOISDS')
 
-        try:
-            self.__run_corona()
-        except:
-            raise Exception('Error running Corona')
+       # try:
+       #     self.__run_corona()
+      #  except:
+       #     raise Exception('Error running Corona')
 
 
         try:
