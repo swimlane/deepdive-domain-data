@@ -13,9 +13,11 @@ jobs:
         steps:
             - uses: actions/checkout@master
             - name: Installing setup-tools
-                run: sudo apt-get install python3-setuptools
+                run: |
+                    sudo apt-get install python3-setuptools
             - name: Install requirements
-                run: pip3 install -r requirements.txt
+                run: |
+                    pip3 install -r requirements.txt
             - name: Create local changes
                 run: |
                     python3 run.py
