@@ -14,17 +14,9 @@ class Corona(object):
     ip_dict = {}
     _czds_folder_list = ['zone_files']
     _whoisds_folder_list = ['whoisds_files']
+    _blacklist_list = []
 
-    def __get_dns_info(self, domain):
-        return_list = []
-        try:
-            answers = dns.resolver.query(domain, 'A')
-        except:
-            return None
-        for server in answers:
-            return_list.append(server.to_text())
-        return return_list
-
+    
     def __get_each_term(self, term_list, directory, zone_file=None):
         chunked_files = {}
         try:
@@ -47,25 +39,7 @@ class Corona(object):
                         for line in f:
                             for term in term_list:
                                 if term['value'].search(line):
-                                    ips = str(self.__get_dns_info(line.strip())).encode('utf-8')
-                                    ips = ast.literal_eval(ips.decode('utf-8'))
-                                    if isinstance(ips, list):
-                                        for ip in ips:
-                                            if term['term'] not in self.ip_dict:
-                                                self.ip_dict[term['term']] = {}
-                                            if ip not in  self.ip_dict[term['term']]:
-                                                self.ip_dict[term['term']][ip] = []
-                                            self.ip_dict[term['term']][ip].append(line)
-
-                                    if term['term'] not in self.zone_dict:
-                                        self.zone_dict[term['term']] ={}
-                        
-                                    if zone.replace('.txt.gz','') not in self.zone_dict[term['term']]:
-                                        self.zone_dict[term['term']][zone.replace('.txt.gz','')] = []
-                                    self.zone_dict[term['term']][zone.replace('.txt.gz','')].append({
-                                        'domain': line,
-                                        'ips': ips
-                                    })
+                                    self._blacklist_list.append(line.strip())
                 except:
                     pass
 
@@ -77,27 +51,8 @@ class Corona(object):
                         line = line.strip()
                         for term in term_list:
                             if term['value'].search(line):
-                                ips = str(self.__get_dns_info(line)).encode('utf-8')
-                                ips = ast.literal_eval(ips.decode('utf-8'))
-                                if isinstance(ips, list):
-                                    for ip in ips:
-                                        if term['term'] not in self.ip_dict:
-                                            self.ip_dict[term['term']] = {}
-                                        if ip not in  self.ip_dict[term['term']]:
-                                            self.ip_dict[term['term']][ip] = []
-                                        self.ip_dict[term['term']][ip].append(line)
+                                self._blacklist_list.append(line.strip())
 
-                                if term['term'] not in self.zone_dict:
-                                    self.zone_dict[term['term']] ={}
-                    
-                                if zone.replace('.txt.gz','') not in self.zone_dict[term['term']]:
-                                    self.zone_dict[term['term']][zone.replace('.txt.gz','')] = []
-                                self.zone_dict[term['term']][zone.replace('.txt.gz','')].append({
-                                    'domain': line,
-                                    'ips': ips
-                                })
-                                
-                                
 
     def __save_json(self, directory, type, data):
         if not os.path.exists(directory):
@@ -107,9 +62,17 @@ class Corona(object):
             f.write(json.dumps(val))
             f.close()
 
+
+    def __save_blacklist(self):
+        master_blacklist_path = './data/blacklist/'
+        master_blacklist = list(set(self._blacklist_list))
+        if not os.path.exists(master_blacklist_path):
+            os.makedirs(master_blacklist_path)
+        with open('{blacklist_path}master_blacklist.txt'.format(blacklist_path=master_blacklist_path), 'w+') as blacklist:
+            blacklist.write("\n".join(master_blacklist))
+
     def generate(self, term_list):
         d = datetime.today() - timedelta(days=2)
-        # save_path = './data/zone_files/{}/'.format(d.strftime('%Y-%m-%d'))
         date = d.strftime('%Y-%m-%d')
         for folder in self._czds_folder_list:  # for full zone transfer files (i.e. czds)
             directory = './data/{folder}/{date}/'.format(folder=folder, date=date)
@@ -123,6 +86,4 @@ class Corona(object):
             for directory in directory_names:
                 self.__get_each_term(term_list, directory)
 
-        # self.__get_each_term(term_list)
-        self.__save_json('./data/json_files/{}'.format(date), 'ip', self.ip_dict)
-        self.__save_json('./data/json_files/{}'.format(date), 'zone', self.zone_dict)
+        self.__save_blacklist()
