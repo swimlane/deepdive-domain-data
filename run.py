@@ -7,7 +7,7 @@ import pendulum
 from corona  import CZDS, WhoisDs, Corona
 
 USERNAME = os.environ['USERNAME']
-ASSWORD = os.environ['PASSWORD']
+PASSWORD = os.environ['PASSWORD']
 
 class RunDomainData(object):
 
