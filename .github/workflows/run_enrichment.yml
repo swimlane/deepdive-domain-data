@@ -1,11 +1,8 @@
-name: Generate Daily JSON File of Blacklisted URLs
+name: Generate Daily Enrichment Domain Data
 
 on:
   schedule:
-    - cron: "0 1 * * *"
-  push:
-    branches:
-      - master
+    - cron: "0 2 * * *"
 
 jobs:
   build:
@@ -33,7 +30,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add .
-        git commit -m "Adding enrichment data"
+        git commit -m "Adding enriched domain data"
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
