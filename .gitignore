@@ -1,6 +1,3 @@
-# The following pattern is used to ignore large files in the data directory
-data/*-*-*/*.txt
-data/*-*-*/*.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
