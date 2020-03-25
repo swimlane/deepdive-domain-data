@@ -6,21 +6,18 @@ This repository contains data related to coronavirus & COVID-19 based domains id
 
 ## Provided JSON Files
 
-Our team has and will continue to generate daily JSON files which can be used for further research and defensive measures.  These JSON files are named based on the term used during generation.  The following terms are used and a generated JSON file is created with each of these terms pre-pended to the appropriate type of file:
+Our team has and will continue to generate daily JSON files which can be used for further research and defensive measures.  These JSON files are are based off of the domains within the `master_blacklist.txt`:
 
-* corona
-* coronav
-* covid
-* pandemic
-* virus
-* vaccine
+* domains_by_ip.json
+* ips_by_doman.json
+
 
 The file formats you will find, each day, are located with in the [Data](data) folder in this repository and will be contained under their appropriate date:
 
-* {term}_ip.json
-    * The datasets ending in `_ip.json` takes all the identified domains and retrieves their A record IP address.  With this JSON file you are able to see which domains are associated with a specific IP address.
-* {term}_zone.json
-    * The datasets ending in `_zone.json` creates a list of dictionaries for each TLD.  Each of these dictionaries contains the actual identified domain and the ip address for this domain based on their A record IP address. 
+* domains_by_ip.json
+    * These json files are organized by key value of the domain name and the value is the domains registered IP addresses.
+* ips_by_doman.json
+    * These json files are organized by key value of IPs and the values are a list of domains associated with that IP address.
 * master_blacklist.txt
     * This file contains a blacklist of all terms and their identified domains, except for domains ending in .gov.  More than likely you should blacklist all of these domains but use at your own discretion.
 
