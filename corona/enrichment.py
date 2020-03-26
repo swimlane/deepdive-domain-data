@@ -52,5 +52,5 @@ class Enrichment(object):
     
     def run(self):
         self.__generate_dicts()
-        self.__save_json('domains_by_ip.json', self._zone_dict)
-        self.__save_json('ips_by_domain.json', self._ip_dict)
+        self.__save_json('ips_by_domain.json', self._zone_dict)
+        self.__save_json('domains_by_ip.json', self._ip_dict)

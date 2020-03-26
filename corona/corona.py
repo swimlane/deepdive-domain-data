@@ -1,7 +1,8 @@
-import os, json, ast, re
+import os, json, re
 import gzip
+import tldextract
 from datetime import datetime, timedelta
-import dns.resolver
+
 try:
     from StringIO import BytesIO ## for Python 2
 except ImportError:
@@ -15,6 +16,7 @@ class Corona(object):
     _czds_folder_list = ['zone_files']
     _whoisds_folder_list = ['whoisds_files']
     _blacklist_list = []
+    _ignore_suffixes = [re.compile(r'^gov(\.[a-z-]+)*', re.IGNORECASE)]
 
     
     def __get_each_term(self, term_list, directory, zone_file=None):
@@ -39,7 +41,14 @@ class Corona(object):
                         for line in f:
                             for term in term_list:
                                 if term['value'].search(line):
-                                    self._blacklist_list.append(line.strip())
+                                    domain = line.strip()
+                                    t = tldextract.tldextract.extract(domain)
+                                    ignore_domain = False
+                                    for ignore_suffix in self._ignore_suffixes:
+                                        if ignore_suffix.search(t.suffix):
+                                            ignore_domain = True
+                                    if not ignore_domain:
+                                        self._blacklist_list.append(domain)
                 except:
                     pass
 
@@ -51,7 +60,14 @@ class Corona(object):
                         line = line.strip()
                         for term in term_list:
                             if term['value'].search(line):
-                                self._blacklist_list.append(line.strip())
+                                domain = line.strip()
+                                t = tldextract.tldextract.extract(domain)
+                                ignore_domain = False
+                                for ignore_suffix in self._ignore_suffixes:
+                                    if ignore_suffix.search(t.suffix):
+                                        ignore_domain = True
+                                if not ignore_domain:
+                                    self._blacklist_list.append(domain)
 
 
     def __save_json(self, directory, type, data):
@@ -69,7 +85,7 @@ class Corona(object):
         if not os.path.exists(master_blacklist_path):
             os.makedirs(master_blacklist_path)
         with open('{blacklist_path}master_blacklist.txt'.format(blacklist_path=master_blacklist_path), 'w+') as blacklist:
-            blacklist.write("\n".join(master_blacklist))
+            blacklist.write("\n".join(sorted(master_blacklist)))
 
     def generate(self, term_list):
         d = datetime.today() - timedelta(days=2)
